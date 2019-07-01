@@ -1,36 +1,37 @@
 version: 2.1
 
 jobs:
-  build:
+  hadolint:
       docker:
-        - image: madkinszane/nextflow-ci:latest
-      environment:
-        HADOLINT: "${HOME}/hadolint"
+        - image: hadolint/hadolint:latest
       steps:
-
-        # Download hadolint binary and set it as executable
-        - run: curl -sL -o ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v1.16.0/hadolint-$(uname -s)-$(uname -m)" && chmod 700 ${HADOLINT}
-
-        # Download nextflow installer and run
-        - run: curl -fsSL https://github.com/nextflow-io/nextflow/releases/download/v19.05.0-edge/nextflow | bash
-
-        # Ensure linters are installed
-        - run: pip install black flake8 flake8-black
-
         - checkout
-
-        # Pass Docker files into HADOLINT
         - run: git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT}
-
-        # Check shell files with SHELLCHECK
+  shellcheck:
+      docker:
+        - image: koalaman/shellcheck:latest
+      steps:
+        - checkout
         - run: bash -c 'shopt -s globstar; shellcheck **/*.{sh,ksh,bash}'
-
-        # Check python files with flake8
-        - run: flake8
+  black:
+      docker:
+        - image: unibeautify/black:latest
+      steps:
+        - checkout
+        - run: black --check
+  flake8:
+    docker:
+      - image: circleci:python:3.7
+    steps:
+      - run: pip install flake8-black
+      - checkout
+      - run: flake8
 
 workflows:
   version: 2.1
   build:
     jobs:
-      - build
-
+      - shellcheck
+      - hadolint
+      - black
+      - flake8
