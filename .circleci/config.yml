@@ -30,7 +30,7 @@ jobs:
     steps:
       - run: sudo pip install pytest
       - checkout
-      - run: ls && pytest .
+      - run: pytest
 
 workflows:
   version: 2.1
