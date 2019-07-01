@@ -1,15 +1,15 @@
-version: 2.0
+version: 2.1
 
 jobs:
   build:
       docker:
         - image: madkinszane/nextflow-ci:latest
+      environment:
+        HADOLINT: "${HOME}/hadolint"
       steps:
 
         # Download hadolint binary and set it as executable
-        - run: |
-          curl -sL -o ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v1.16.0/hadolint-$(uname -s)-$(uname -m)"
-          chmod 700 ${HADOLINT}
+        - run: curl -sL -o ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v1.16.0/hadolint-$(uname -s)-$(uname -m)" && chmod 700 ${HADOLINT}
 
         # Download nextflow installer and run
         - run: curl -fsSL https://github.com/nextflow-io/nextflow/releases/download/v19.05.0-edge/nextflow | bash
@@ -29,7 +29,7 @@ jobs:
         - run: flake8
 
 workflows:
-  version: 2.0
+  version: 2.1
   build:
     jobs:
       - build
