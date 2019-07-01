@@ -31,6 +31,12 @@ jobs:
       - run: sudo pip install pytest
       - checkout
       - run: python -m pytest
+  nextflow_tests:
+    docker:
+      - image: madkinszane/nextflow-ci
+    steps:
+      - checkout
+      - run: ./tests/test_nf_main.sh
 
 workflows:
   version: 2.1
@@ -43,3 +49,4 @@ workflows:
   test:
     jobs:
       - pytest
+      - nextflow_tests
