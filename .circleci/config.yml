@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  shellcheck: circleci/shellcheck@1.0.0
+
 jobs:
   hadolint:
       docker:
@@ -7,12 +10,6 @@ jobs:
       steps:
         - checkout
         - run: git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT}
-  shellcheck:
-      docker:
-        - image: koalaman/shellcheck:latest
-      steps:
-        - checkout
-        - run: bash -c 'shopt -s globstar; shellcheck **/*.{sh,ksh,bash}'
   black:
       docker:
         - image: unibeautify/black:latest
@@ -31,7 +28,7 @@ workflows:
   version: 2.1
   build:
     jobs:
-      - shellcheck
+      - shellcheck/check
       - hadolint
       - black
       - flake8
