@@ -24,6 +24,13 @@ jobs:
       - run: sudo pip install flake8-black
       - checkout
       - run: flake8
+  pytest:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - run: sudo pip install pytest
+      - checkout
+      - run: pytest
 
 workflows:
   version: 2.1
@@ -33,3 +40,6 @@ workflows:
       - hadolint
       - black
       - flake8
+  test:
+    jobs:
+      - pytest
