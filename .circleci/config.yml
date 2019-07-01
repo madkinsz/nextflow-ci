@@ -6,7 +6,7 @@ orbs:
 jobs:
   hadolint:
       docker:
-        - image: hadolint/hadolint:latest
+        - image: hadolint/hadolint:latest-debian
       steps:
         - checkout
         - run: git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT}
