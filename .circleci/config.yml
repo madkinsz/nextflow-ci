@@ -29,6 +29,7 @@ jobs:
       - image: circleci/python:3.7
     steps:
       - run: sudo pip install pytest
+      - run: sudo pip install -e ./modules/py_modules_ex
       - checkout
       - run: pytest
 
