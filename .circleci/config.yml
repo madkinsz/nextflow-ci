@@ -8,6 +8,7 @@ jobs:
       docker:
         - image: hadolint/hadolint:latest-debian
       steps:
+        - run: apt update -y && apt install -y git
         - checkout
         - run: git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT}
   black:
@@ -20,7 +21,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     steps:
-      - run: pip install flake8-black
+      - run: sudo pip install flake8-black
       - checkout
       - run: flake8
 
