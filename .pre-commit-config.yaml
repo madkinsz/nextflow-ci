@@ -3,6 +3,9 @@ repos:
     rev: master
     hooks:
     - id: check-executables-have-shebangs
+    - id: debug-statements
+    - id: check-merge-conflict
+      stages: [push]
     - id: flake8
 -   repo: https://github.com/python/black
     rev: stable
@@ -18,3 +21,9 @@ repos:
     types:
       - dockerfile
     entry: --entrypoint /bin/hadolint hadolint/hadolint:latest --ignore DL3013 --ignore DL3018 --ignore DL3008 -
+  -   id: tests
+      name: run tests
+      entry: pytest -v
+      language: system
+      types: [python]
+      stages: [push]
