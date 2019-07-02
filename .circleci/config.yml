@@ -1,7 +1,9 @@
 version: 2.1
 
+
 orbs:
   shellcheck: circleci/shellcheck@1.0.0
+
 
 jobs:
   hadolint:
@@ -11,12 +13,14 @@ jobs:
         - run: apt update -y && apt install -y git
         - checkout
         - run: git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT}
+
   black:
       docker:
         - image: unibeautify/black:latest
       steps:
         - checkout
-        - run: black --check
+        - run: black --check .
+
   flake8:
     docker:
       - image: circleci/python:3.7
@@ -24,6 +28,7 @@ jobs:
       - run: sudo pip install flake8-black
       - checkout
       - run: flake8
+
   pytest:
     docker:
       - image: circleci/python:3.7
@@ -31,6 +36,7 @@ jobs:
       - run: sudo pip install pytest
       - checkout
       - run: python -m pytest
+
   nextflow_tests:
     docker:
       - image: madkinszane/nextflow-ci
@@ -38,14 +44,17 @@ jobs:
       - checkout
       - run: ./tests/test_nf_main.sh
 
+
 workflows:
   version: 2.1
+
   lint:
     jobs:
       - shellcheck/check
       - hadolint
       - black
       - flake8
+
   test:
     jobs:
       - pytest
